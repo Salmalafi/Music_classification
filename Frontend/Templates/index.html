@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Music Genre and Image Classifier</title>
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Classification Services</h1>
+
+        <!-- Music Genre Classification Section -->
+        <section>
+            <h2>Music Genre Classifier</h2>
+            <form id="audio-form" enctype="multipart/form-data">
+                <label for="audio-file">Upload a Music File (WAV):</label>
+                <input type="file" id="audio-file" accept="audio/wav" required>
+                <!-- Button for SVM prediction -->
+                <button type="button" onclick="predictSvmGenre()">Predict Genre with SVM</button>
+            </form>
+            <p id="music-result"></p>
+        </section>
+        
+        <hr>
+
+        <!-- Image Classification Section -->
+        <section>
+            <h2>Music Genre Classifier (VGG19)</h2>
+            <form id="image-form" enctype="multipart/form-data">
+                <label for="audio-file">Upload a Music File (WAV):</label>
+                <input type="file" id="audio-file" accept="audio/wav" required>
+                <!-- Button for VGG19 prediction -->
+                <button type="button" onclick="predictGenre()">Classify Music with VGG19</button>
+            </form>
+            <p id="image-result"></p>
+        </section>
+    </div>
+
+    <!-- JavaScript for handling file upload and prediction -->
+    <script src="static/js/app.js"></script>
+</body>
+</html>
