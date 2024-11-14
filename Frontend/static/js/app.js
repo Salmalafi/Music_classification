@@ -1,10 +1,18 @@
+<<<<<<< HEAD
+=======
+// Function to predict the genre for music using VGG19
+>>>>>>> b0a666358a5f0dc76159d0990b7a14afd01b7b46
 async function predictGenre() {
     const reader = new FileReader();
     reader.onload = async function(event) {
         const base64Audio = event.target.result.split(',')[1];
 
         try {
+<<<<<<< HEAD
             const response = await fetch('http://localhost:9000/predict_vgg', { // Correct API for VGG19
+=======
+            const response = await fetch('http://localhost:5001/predict', { // Correct API for VGG19
+>>>>>>> b0a666358a5f0dc76159d0990b7a14afd01b7b46
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -27,6 +35,10 @@ async function predictGenre() {
     reader.readAsDataURL(audioFile);
 }
 
+<<<<<<< HEAD
+=======
+// Function to predict the genre for music using the SVM model
+>>>>>>> b0a666358a5f0dc76159d0990b7a14afd01b7b46
 async function predictSvmGenre() {
     const audioFile = document.getElementById('audio-file').files[0];
     if (!audioFile) {
@@ -39,7 +51,11 @@ async function predictSvmGenre() {
         const base64Audio = event.target.result.split(',')[1];
 
         try {
+<<<<<<< HEAD
             const response = await fetch('http://localhost:5000/predict', { 
+=======
+            const response = await fetch('http://localhost:5000/predict', { // Correct API for SVM
+>>>>>>> b0a666358a5f0dc76159d0990b7a14afd01b7b46
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
