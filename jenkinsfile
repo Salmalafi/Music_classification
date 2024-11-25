@@ -1,0 +1,98 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME_VGG19 = 'vgg19-service'
+        IMAGE_NAME_SVM = 'svm-service'
+        IMAGE_NAME_FRONTEND = 'frontend'
+        DOCKER_REGISTRY = 'salmalafiii23'
+        COMPOSE_FILE = 'docker-compose.yml'
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                script {
+                    // Clean the workspace
+                    cleanWs()
+
+                    // Clone the repository
+                    checkout scm
+                }
+            }
+        }
+
+        stage('Build Docker Images') {
+            steps {
+                script {
+                    // Build Docker images using docker-compose
+                    sh 'docker-compose -f ${COMPOSE_FILE} build'
+                }
+            }
+        }
+
+        stage('Test Docker Services') {
+            steps {
+                script {
+                    try {
+                        // Start services and run tests
+                        sh 'docker-compose -f ${COMPOSE_FILE} up -d'
+
+                        // Example: Run VGG19 service tests
+                        sh 'docker exec -t vgg19_service python -m unittest discover -s tests/vgg19_service'
+
+                        // Example: Run Frontend service tests
+                        sh 'docker exec -t frontend_service npm test'
+                    } finally {
+                        // Stop services
+                        sh 'docker-compose -f ${COMPOSE_FILE} down'
+                    }
+                }
+            }
+        }
+
+        stage('Publish Test Results') {
+            steps {
+                script {
+                    // Copy test results if applicable (adjust paths as needed)
+                    sh 'docker cp vgg19_service:/path/to/vgg19_test_results.xml ./vgg19_test_results.xml'
+                    sh 'docker cp frontend:/path/to/frontend_test_results.xml ./frontend_test_results.xml'
+
+                    // Publish test results in Jenkins
+                    junit allowEmptyResults: true, testResults: '**/*_test_results.xml'
+                }
+            }
+        }
+
+        stage('Push Docker Images') {
+            steps {
+                script {
+                    // Push images to Docker Hub
+                    withDockerRegistry([credentialsId: 'docker-hub-credentials']) {
+                        sh 'docker push ${DOCKER_REGISTRY}/${IMAGE_NAME_FRONTEND}:latest'
+                        sh 'docker push ${DOCKER_REGISTRY}/${IMAGE_NAME_VGG19}:latest'
+                        sh 'docker push ${DOCKER_REGISTRY}/${IMAGE_NAME_SVM}:latest'
+                    }
+                }
+            }
+        }
+
+        stage('Deploy Application') {
+            steps {
+                script {
+                    // Deploy services
+                    sh 'docker-compose -f ${COMPOSE_FILE} up -d'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed.'
+        }
+    }
+}

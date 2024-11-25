@@ -1,0 +1,27 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile  
+    ports:
+      - "5001:5001"
+
+  vgg19_service:
+    build:
+      context: ./vgg19_service
+      dockerfile: Dockerfile  
+    ports:
+      - "5002:5002"
+    depends_on:
+      - frontend
+    volumes:
+      - ./shared:/shared
+
+  svm_service:
+    build:
+      context: ./svm_service
+      dockerfile: Dockerfile   
+    ports:
+      - "5000:5000"
+    depends_on:
+      - frontend
