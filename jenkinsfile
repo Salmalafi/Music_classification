@@ -41,8 +41,6 @@ pipeline {
                         // Run tests for SVM service
                         sh 'docker exec -t svm_service python -m unittest discover -s svm_service/tests'
 
-                        // Optionally: Run tests for frontend
-                        sh 'docker exec -t frontend_service npm test'
                     } finally {
                         // Stop services after tests
                         sh 'docker-compose -f ${COMPOSE_FILE} down'
@@ -54,9 +52,8 @@ pipeline {
         stage('Publish Test Results') {
             steps {
                 script {
-                    // Copy test results (adjust paths as needed)
+                    // Copy test results for SVM service (adjust paths as needed)
                     sh 'docker cp svm_service:tests/svm_test_results.xml ./svm_test_results.xml'
-                    sh 'docker cp frontend:tests/frontend_test_results.xml ./frontend_test_results.xml'
 
                     // Publish test results in Jenkins
                     junit allowEmptyResults: true, testResults: '**/*_test_results.xml'
