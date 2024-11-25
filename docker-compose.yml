@@ -1,27 +1,24 @@
+version: '3.8'
+
 services:
+  svm-service:
+    build:
+      context: ./svm_service
+    container_name: svm_service
+    ports:
+      - "5000:5000"
+
+
+  vgg19-service:
+    build:
+      context: ./vgg19_service
+    container_name: vgg19_service
+    ports:
+      - "5002:5002"
+
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile  
+    container_name: frontend
     ports:
       - "5001:5001"
-
-  vgg19_service:
-    build:
-      context: ./vgg19_service
-      dockerfile: Dockerfile  
-    ports:
-      - "5002:5002"
-    depends_on:
-      - frontend
-    volumes:
-      - ./shared:/shared
-
-  svm_service:
-    build:
-      context: ./svm_service
-      dockerfile: Dockerfile   
-    ports:
-      - "5000:5000"
-    depends_on:
-      - frontend
