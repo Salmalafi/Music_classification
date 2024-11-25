@@ -35,16 +35,16 @@ pipeline {
             steps {
                 script {
                     try {
-                        // Start services and run tests
+                        // Start services
                         sh 'docker-compose -f ${COMPOSE_FILE} up -d'
 
-                        // Example: Run VGG19 service tests
-                        sh 'docker exec -t vgg19_service python -m unittest discover -s tests/vgg19_service'
+                        // Run tests for SVM service
+                        sh 'docker exec -t svm_service python -m unittest discover -s tests/svm_service'
 
-                        // Example: Run Frontend service tests
+                        // Optionally: Run tests for frontend
                         sh 'docker exec -t frontend_service npm test'
                     } finally {
-                        // Stop services
+                        // Stop services after tests
                         sh 'docker-compose -f ${COMPOSE_FILE} down'
                     }
                 }
@@ -54,9 +54,9 @@ pipeline {
         stage('Publish Test Results') {
             steps {
                 script {
-                    // Copy test results if applicable (adjust paths as needed)
-                    sh 'docker cp vgg19_service:/path/to/vgg19_test_results.xml ./vgg19_test_results.xml'
-                    sh 'docker cp frontend:/path/to/frontend_test_results.xml ./frontend_test_results.xml'
+                    // Copy test results (adjust paths as needed)
+                    sh 'docker cp svm_service:tests/svm_test_results.xml ./svm_test_results.xml'
+                    sh 'docker cp frontend:tests/frontend_test_results.xml ./frontend_test_results.xml'
 
                     // Publish test results in Jenkins
                     junit allowEmptyResults: true, testResults: '**/*_test_results.xml'
