@@ -7,7 +7,9 @@ services:
     container_name: svm_service
     ports:
       - "5000:5000"
-
+    volumes:
+      - ./svm_service/tests:/app/tests  # Mount the tests directory to the container
+    working_dir: /app  # Set the working directory in the container
 
   vgg19-service:
     build:
@@ -22,3 +24,6 @@ services:
     container_name: frontend
     ports:
       - "5001:5001"
+    volumes:
+      - ./frontend/tests:/app/tests  # Mount the tests directory to the container
+    working_dir: /app  # Set the working directory in the container
