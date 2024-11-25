@@ -39,7 +39,7 @@ pipeline {
                         sh 'docker-compose -f ${COMPOSE_FILE} up -d'
 
                         // Run tests for SVM service
-                        sh 'docker exec -t svm_service python -m unittest discover -s tests/svm_service'
+                        sh 'docker exec -t svm_service python -m unittest discover -s svm_service/tests'
 
                         // Optionally: Run tests for frontend
                         sh 'docker exec -t frontend_service npm test'

@@ -24,6 +24,4 @@ services:
     container_name: frontend
     ports:
       - "5001:5001"
-    volumes:
-      - ./frontend/tests:/app/tests  # Mount the tests directory to the container
-    working_dir: /app  # Set the working directory in the container
+    
