@@ -8,8 +8,8 @@ ENV STATIC_URL /static
 ENV STATIC_PATH /app/static
 
 # Copy the requirements file and install dependencies
-COPY ./requirements.txt /requirements.txt
-RUN pip install -r /requirements.txt
+COPY ./requirements.txt /app/requirements.txt
+RUN pip install -r /app/requirements.txt
 
 # Copy the model file
 COPY ./app/svm-classification-model.h5 /app/svm-classification-model.h5
@@ -27,4 +27,5 @@ RUN chmod -R 755 /app
 EXPOSE 5000
 
 # Command to run the application
-CMD ["python", "app.py"]
+CMD ["python", "/app/app.py"]
+
