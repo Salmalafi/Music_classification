@@ -41,7 +41,7 @@ pipeline {
                         sh 'docker ps -a'
 
                         // Run tests for SVM service
-                        sh 'docker exec -t svm_service python -m unittest discover -s svm_service/tests'
+                        sh 'docker exec -t svm_service python -m unittest discover -s /app/tests'
 
                     } finally {
                         // Stop services after tests
