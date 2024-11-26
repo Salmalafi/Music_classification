@@ -13,10 +13,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 script {
-                    // Clean the workspace
                     cleanWs()
-
-                    // Clone the repository
                     checkout scm
                 }
             }
@@ -25,7 +22,6 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 script {
-                    // Build Docker images using docker-compose
                     sh 'docker-compose -f ${COMPOSE_FILE} build'
                 }
             }
@@ -37,6 +33,12 @@ pipeline {
                     try {
                         // Start services
                         sh 'docker-compose -f ${COMPOSE_FILE} up -d'
+
+                        // Wait for services to be ready
+                        sh 'sleep 20'
+
+                        // Optional: Verify running containers
+                        sh 'docker ps -a'
 
                         // Run tests for SVM service
                         sh 'docker exec -t svm_service python -m unittest discover -s svm_service/tests'
@@ -52,10 +54,7 @@ pipeline {
         stage('Publish Test Results') {
             steps {
                 script {
-                    // Copy test results for SVM service (adjust paths as needed)
                     sh 'docker cp svm_service:tests/svm_test_results.xml ./svm_test_results.xml'
-
-                    // Publish test results in Jenkins
                     junit allowEmptyResults: true, testResults: '**/*_test_results.xml'
                 }
             }
@@ -64,7 +63,6 @@ pipeline {
         stage('Push Docker Images') {
             steps {
                 script {
-                    // Push images to Docker Hub
                     withDockerRegistry([credentialsId: 'docker-hub-credentials']) {
                         sh 'docker push ${DOCKER_REGISTRY}/${IMAGE_NAME_FRONTEND}:latest'
                         sh 'docker push ${DOCKER_REGISTRY}/${IMAGE_NAME_VGG19}:latest'
@@ -77,7 +75,6 @@ pipeline {
         stage('Deploy Application') {
             steps {
                 script {
-                    // Deploy services
                     sh 'docker-compose -f ${COMPOSE_FILE} up -d'
                 }
             }
