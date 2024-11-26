@@ -1,6 +1,6 @@
 FROM python:3.9-slim-buster
 
-WORKDIR /app  # Change this to the directory where your app should live
+WORKDIR ./ 
 
 ENV STATIC_URL /static
 ENV STATIC_PATH /app/static
@@ -22,4 +22,4 @@ RUN chmod -R 755 /app
 EXPOSE 5000
 
 # Command to run the application
-CMD ["python", "/app/app.py"]
+CMD ["python", "app.py"]
