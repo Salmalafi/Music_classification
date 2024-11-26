@@ -46,17 +46,20 @@ pipeline {
                         // Debugging steps: Check if the test directory exists inside the container
                         sh 'docker exec -t svm_service ls -la /tests'
 
-                        // Debug: Check the current working directory inside the container
+                        // Check the current working directory inside the container
                         sh 'docker exec -t svm_service pwd'
 
-                        // Debug: Print the PYTHONPATH to check if the directories are correct
+                        // Print the PYTHONPATH to check if the directories are correct
                         sh 'docker exec -t svm_service echo $PYTHONPATH'
 
-                        // Run tests for SVM service
-                        sh 'docker exec -t svm_service python -m unittest discover -s /tests -p "*.py"'
+                        // Ensure pytest is installed in the container
+                        sh 'docker exec -t svm_service pip install pytest'
+
+                        // Run tests for SVM service using pytest and generate test results as XML
+                        sh 'docker exec -t svm_service pytest /tests --maxfail=1 --disable-warnings -q --junitxml=/tests/svm_test_results.xml'
 
                         // Copy the test results from the container to the local workspace
-                        sh 'docker cp svm_service:/svm_service/tests/svm_test_results.xml ./svm_test_results.xml'
+                        sh 'docker cp svm_service:/tests/svm_test_results.xml ./svm_test_results.xml'
 
                     } catch (Exception e) {
                         echo "Error during testing: ${e}"
