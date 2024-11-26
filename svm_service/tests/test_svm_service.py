@@ -23,25 +23,27 @@ class TestSVMService(unittest.TestCase):
 
     def test_invalid_audio(self):
         """Test with invalid audio data"""
-        data = {"music_data": "invalid_base64_audio_data"}
+        data = {"music_data": "invalid_base64_audio_data"}  # Invalid base64 string
         response = requests.post(BASE_URL, json=data)
         
-        self.assertEqual(response.status_code, 200)
+        # Expecting 400 status code for invalid input
+        self.assertEqual(response.status_code, 400)
         response_json = response.json()
         self.assertIn("received_message", response_json)
         self.assertEqual(response_json["received_message"], "An error occurred during prediction")
-        self.assertIn("error", response_json)
+        self.assertIn("error", response_json)  # Error message should be present
 
     def test_missing_audio(self):
         """Test with no audio data"""
         response = requests.post(BASE_URL, json={})
         
-        self.assertEqual(response.status_code, 200)
+        # Expecting 400 status code for missing audio data
+        self.assertEqual(response.status_code, 400)
         response_json = response.json()
         self.assertIn("received_message", response_json)
         self.assertEqual(response_json["received_message"], "No music file received")
         self.assertIn("response", response_json)
-        self.assertEqual(response_json["response"], "Error")
+        self.assertEqual(response_json["response"], "Error")  # "Error" response for missing data
 
 if __name__ == "__main__":
     unittest.main()
