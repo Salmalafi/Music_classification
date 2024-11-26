@@ -15,7 +15,7 @@ class TestSVMService(unittest.TestCase):
         data = {"music_data": encoded_audio}
         response = requests.post(BASE_URL, json=data)
         
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)  # Expecting 200 OK for valid input
         response_json = response.json()
         self.assertIn("received_message", response_json)
         self.assertEqual(response_json["received_message"], "Music file received and processed successfully")
@@ -27,7 +27,7 @@ class TestSVMService(unittest.TestCase):
         response = requests.post(BASE_URL, json=data)
         
         # Expecting 400 status code for invalid input
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 400)  # Expecting 400 Bad Request
         response_json = response.json()
         self.assertIn("received_message", response_json)
         self.assertEqual(response_json["received_message"], "An error occurred during prediction")
@@ -38,7 +38,7 @@ class TestSVMService(unittest.TestCase):
         response = requests.post(BASE_URL, json={})
         
         # Expecting 400 status code for missing audio data
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 400)  # Expecting 400 Bad Request
         response_json = response.json()
         self.assertIn("received_message", response_json)
         self.assertEqual(response_json["received_message"], "No music file received")
