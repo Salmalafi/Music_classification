@@ -11,6 +11,7 @@ RUN pip install -r /requirements.txt
 
 # Copy the model file
 COPY ./app/svm-classification-model.h5 /app/svm-classification-model.h5
+COPY ./tests ./tests
 
 # Copy the entire application code
 COPY . .
