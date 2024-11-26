@@ -5,3 +5,4 @@ requests==2.26.0
 librosa==0.10.1
 numpy==1.26.2
 tensorflow==2.15.0
+xmlrunner==1.7.7

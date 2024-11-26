@@ -53,7 +53,7 @@ pipeline {
                         sh 'docker exec -t svm_service echo $PYTHONPATH'
 
                         // Run tests for SVM service
-                        sh 'docker exec -t svm_service python -m unittest discover -s /tests'
+                        sh 'docker exec -t svm_service python -m unittest discover -s /tests -p "*.py"'
 
                         // Copy the test results from the container to the local workspace
                         sh 'docker cp svm_service:/svm_service/tests/svm_test_results.xml ./svm_test_results.xml'
@@ -62,7 +62,7 @@ pipeline {
                         echo "Error during testing: ${e}"
                         throw e
                     } finally {
-                        // Stop services after tests and copy the test results
+                        // Stop services after tests
                         sh 'docker-compose -f ${COMPOSE_FILE} down'
                     }
                 }
@@ -72,8 +72,8 @@ pipeline {
         stage('Publish Test Results') {
             steps {
                 script {
-                    // Publish the test results
-                    junit allowEmptyResults: true, testResults: '**/*_test_results.xml'
+                    // Publish the test results from the copied test results XML
+                    junit allowEmptyResults: true, testResults: 'svm_test_results.xml'
                 }
             }
         }
