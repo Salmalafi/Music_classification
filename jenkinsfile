@@ -30,6 +30,16 @@ pipeline {
             }
         }
 
+        stage('Install pytest in Docker') {
+            steps {
+                script {
+                    // Ensure pytest is installed in the svm_service container
+                    echo 'Installing pytest inside svm_service container...'
+                    sh "docker exec -t svm_service pip3 install pytest"
+                }
+            }
+        }
+
         stage('Test Docker Services') {
             steps {
                 script {
