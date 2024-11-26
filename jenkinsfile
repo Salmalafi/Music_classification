@@ -57,10 +57,10 @@ pipeline {
                         sh 'docker exec -t svm_service pip install pytest'
 
                         // Run tests for the SVM service using pytest
-                        sh 'docker exec -t svm_service pytest /tests --maxfail=1 --disable-warnings -q --junitxml=/tests/svm_test_results.xml'
+                        sh 'docker exec -t svm_service pytest /tests --maxfail=1 --disable-warnings -q --junitxml=/tests/junitResult.xml'
 
-                        // Copy the test results from the container to the local workspace
-                        sh 'docker cp svm_service:/tests/svm_test_results.xml ./svm_test_results.xml'
+                        // Copy the test results from the Jenkins job directory to the local workspace
+                        sh 'cp /var/lib/jenkins/jobs/${JOB_NAME}/builds/${BUILD_NUMBER}/archive/junitResult.xml ./junitResult.xml'
 
                     } catch (Exception e) {
                         echo "Error during testing: ${e}"
@@ -77,7 +77,7 @@ pipeline {
             steps {
                 script {
                     // Publish the test results from the copied test results XML
-                    junit allowEmptyResults: true, testResults: 'svm_test_results.xml'
+                    junit allowEmptyResults: true, testResults: 'junitResult.xml'
                 }
             }
         }
