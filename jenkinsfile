@@ -40,6 +40,9 @@ pipeline {
                         // Optional: Verify running containers
                         sh 'docker ps -a'
 
+                        // Debugging: Get logs of the svm_service container immediately
+                        sh 'docker logs svm_service'
+
                         // Debugging steps: Check if the test directory exists inside the container
                         sh 'docker exec -t svm_service ls -la /svm_service/tests'
 
