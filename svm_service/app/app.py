@@ -45,23 +45,28 @@ def predict_genre(file_path):
     
     return predicted_genre_name
 
-@app.route('/classify', methods=['POST'])
+@@app.route('/classify', methods=['POST'])
 def classify():
     data = request.get_json()
     
     if data and "music_data" in data:
-        # Get the base64 audio data from the request
         encoded_music_data = data["music_data"]
-        decoded_music_data = base64.b64decode(encoded_music_data)
+        try:
+            # Attempt to decode base64
+            decoded_music_data = base64.b64decode(encoded_music_data)
+        except base64.binascii.Error as e:
+            # Handle invalid base64 input
+            return jsonify({
+                "received_message": "An error occurred during prediction",
+                "error": "Invalid base64 data provided"
+            }), 200
 
         # Use a temporary directory for the audio file
         temp_dir = tempfile.mkdtemp()
-
-        # Path to the temporary wav file
         temp_wav_file = os.path.join(temp_dir, 'temp_audio.wav')
 
         try:
-            # Write the decoded audio data to a temporary file
+            # Write decoded data to a temporary file
             with open(temp_wav_file, 'wb') as temp_file:
                 temp_file.write(decoded_music_data)
 
@@ -73,19 +78,22 @@ def classify():
                 "response": genre,
             }
         except Exception as e:
-            # Catch any errors during prediction
+            # Handle errors during prediction
             response_data = {
                 "received_message": "An error occurred during prediction",
                 "error": str(e),
             }
+        finally:
+            os.remove(temp_wav_file)
+            os.rmdir(temp_dir)
     else:
         response_data = {
             "received_message": "No music file received",
             "response": "Error"
         }
 
-    # Always return JSON response
     return jsonify(response_data)
+
 
 if __name__ == '__main__':
     # Run the Flask app
