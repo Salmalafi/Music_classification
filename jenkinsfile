@@ -40,9 +40,21 @@ pipeline {
                         // Optional: Verify running containers
                         sh 'docker ps -a'
 
+                        // Debugging steps: Check if the test directory exists inside the container
+                        sh 'docker exec -t svm_service ls -la /svm_service/tests'
+
+                        // Debug: Check the current working directory inside the container
+                        sh 'docker exec -t svm_service pwd'
+
+                        // Debug: Print the PYTHONPATH to check if the directories are correct
+                        sh 'docker exec -t svm_service echo $PYTHONPATH'
+
                         // Run tests for SVM service
                         sh 'docker exec -t svm_service python -m unittest discover -s /svm_service/tests'
 
+                    } catch (Exception e) {
+                        echo "Error during testing: ${e}"
+                        throw e
                     } finally {
                         // Stop services after tests
                         sh 'docker-compose -f ${COMPOSE_FILE} down'
@@ -54,7 +66,9 @@ pipeline {
         stage('Publish Test Results') {
             steps {
                 script {
-                    sh 'docker cp svm_service:tests/svm_test_results.xml ./svm_test_results.xml'
+                    // Copy the test results from the container to the local workspace
+                    sh 'docker cp svm_service:/svm_service/tests/svm_test_results.xml ./svm_test_results.xml'
+                    // Publish the test results
                     junit allowEmptyResults: true, testResults: '**/*_test_results.xml'
                 }
             }
@@ -64,6 +78,7 @@ pipeline {
             steps {
                 script {
                     withDockerRegistry([credentialsId: 'docker-hub-credentials']) {
+                        // Push Docker images to the registry
                         sh 'docker push ${DOCKER_REGISTRY}/${IMAGE_NAME_FRONTEND}:latest'
                         sh 'docker push ${DOCKER_REGISTRY}/${IMAGE_NAME_VGG19}:latest'
                         sh 'docker push ${DOCKER_REGISTRY}/${IMAGE_NAME_SVM}:latest'
@@ -75,6 +90,7 @@ pipeline {
         stage('Deploy Application') {
             steps {
                 script {
+                    // Deploy the application using Docker Compose
                     sh 'docker-compose -f ${COMPOSE_FILE} up -d'
                 }
             }
