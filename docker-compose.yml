@@ -6,7 +6,9 @@ services:
       context: ./svm_service
     container_name: svm_service
     ports:
-      - "5000:5000"      
+      - "5000:5000"   
+
+   
   vgg19-service:
     build:
       context: ./vgg19_service

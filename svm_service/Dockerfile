@@ -1,7 +1,9 @@
 FROM python:3.9-slim-buster
 
-WORKDIR ./ 
+# Set the working directory to /app
+WORKDIR /app
 
+# Set environment variables for static files (if needed)
 ENV STATIC_URL /static
 ENV STATIC_PATH /app/static
 
@@ -11,9 +13,11 @@ RUN pip install -r /requirements.txt
 
 # Copy the model file
 COPY ./app/svm-classification-model.h5 /app/svm-classification-model.h5
-COPY ./tests ./tests
 
-# Copy the entire application code
+# Copy the tests directory into /app/tests in the container
+COPY ./tests /app/tests
+
+# Copy the entire application code into /app
 COPY . .
 
 # Ensure correct permissions (optional but useful in case of permission issues)

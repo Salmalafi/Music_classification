@@ -50,7 +50,7 @@ pipeline {
                         sh 'docker exec -t svm_service echo $PYTHONPATH'
 
                         // Run tests for SVM service
-                        sh 'docker exec -t svm_service python -m unittest discover -s /svm_service/tests'
+                        sh 'docker exec -t svm_service python -m unittest discover -s /app/tests'
 
                     } catch (Exception e) {
                         echo "Error during testing: ${e}"
