@@ -20,9 +20,6 @@ COPY ./tests ./tests
 # Copy the entire application code into the current directory
 COPY . .
 
-# Ensure correct permissions (optional but useful in case of permission issues)
-RUN chmod -R 755 ./
-
 # Expose the port the app will run on
 EXPOSE 5000
 
