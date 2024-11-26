@@ -27,4 +27,4 @@ RUN chmod -R 755 /app
 EXPOSE 5000
 
 # Command to run the application
-CMD ["python", "/app/app.py"]
+CMD ["python", "app.py"]
