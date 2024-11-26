@@ -13,8 +13,8 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 script {
-                    cleanWs()
-                    checkout scm
+                    cleanWs()  // Clean workspace before starting
+                    checkout scm  // Checkout the code from SCM
                 }
             }
         }
@@ -22,7 +22,8 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 script {
-                    sh 'docker-compose -f ${COMPOSE_FILE} build'
+                    // Build images using docker-compose
+                    sh "docker-compose -f ${COMPOSE_FILE} build"
                 }
             }
         }
@@ -31,22 +32,22 @@ pipeline {
             steps {
                 script {
                     try {
-                        // Start services
-                        sh 'docker-compose -f ${COMPOSE_FILE} up -d'
+                        // Start services in detached mode
+                        sh "docker-compose -f ${COMPOSE_FILE} up -d"
 
                         // Wait for services to be ready
                         sh 'sleep 20'
 
-                        // Optional: Verify running containers
+                        // Debugging: Verify running containers
                         sh 'docker ps -a'
 
-                        // Debugging: Get logs of the svm_service container immediately
+                        // Check logs of the svm_service container
                         sh 'docker logs svm_service'
 
-                        // Debugging steps: Check if the test directory exists inside the container
+                        // Check if the test directory exists inside the container
                         sh 'docker exec -t svm_service ls -la /tests'
 
-                        // Check the current working directory inside the container
+                        // Print the working directory inside the container
                         sh 'docker exec -t svm_service pwd'
 
                         // Print the PYTHONPATH to check if the directories are correct
@@ -55,7 +56,7 @@ pipeline {
                         // Ensure pytest is installed in the container
                         sh 'docker exec -t svm_service pip install pytest'
 
-                        // Run tests for SVM service using pytest and generate test results as XML
+                        // Run tests for the SVM service using pytest
                         sh 'docker exec -t svm_service pytest /tests --maxfail=1 --disable-warnings -q --junitxml=/tests/svm_test_results.xml'
 
                         // Copy the test results from the container to the local workspace
@@ -65,8 +66,8 @@ pipeline {
                         echo "Error during testing: ${e}"
                         throw e
                     } finally {
-                        // Stop services after tests
-                        sh 'docker-compose -f ${COMPOSE_FILE} down'
+                        // Cleanup: Stop services after tests
+                        sh "docker-compose -f ${COMPOSE_FILE} down"
                     }
                 }
             }
@@ -81,25 +82,24 @@ pipeline {
             }
         }
 
-      stage('Push Docker Images') {
-    steps {
-        script {
-            withDockerRegistry([credentialsId: 'docker-hub-credentials']) {
-                // Push the images using the tags defined in docker-compose.yml
-                sh "docker push salmalafiii23/svm-service:latest"
-                sh "docker push salmalafiii23/vgg19-service:latest"
-                sh "docker push salmalafiii23/frontend:latest"
+        stage('Push Docker Images') {
+            steps {
+                script {
+                    // Push Docker images to the registry
+                    withDockerRegistry([credentialsId: 'docker-hub-credentials']) {
+                        sh "docker push ${DOCKER_REGISTRY}/svm-service:latest"
+                        sh "docker push ${DOCKER_REGISTRY}/vgg19-service:latest"
+                        sh "docker push ${DOCKER_REGISTRY}/frontend:latest"
+                    }
+                }
             }
         }
-    }
-}
-
 
         stage('Deploy Application') {
             steps {
                 script {
                     // Deploy the application using Docker Compose
-                    sh 'docker-compose -f ${COMPOSE_FILE} up -d'
+                    sh "docker-compose -f ${COMPOSE_FILE} up -d"
                 }
             }
         }
