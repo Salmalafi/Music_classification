@@ -7,6 +7,8 @@ pipeline {
         IMAGE_NAME_FRONTEND = 'frontend'
         DOCKER_REGISTRY = 'salmalafiii23'
         COMPOSE_FILE = 'docker-compose.yml'
+        TEST_RESULTS_PATH = '/tests/junitResult.xml'  // Path inside container where test results will be saved
+        LOCAL_TEST_RESULTS_PATH = 'tests/junitResult.xml' // Path in the Jenkins workspace where the result will be copied
     }
 
     stages {
@@ -38,26 +40,14 @@ pipeline {
                         // Wait for services to be ready
                         sh 'sleep 20'
 
-                        // Debugging: Verify running containers
-                        sh 'docker ps -a'
+                        // Run tests for the SVM service using pytest inside the container
+                        sh "docker exec -t svm_service pytest /tests --maxfail=1 --disable-warnings -q --junitxml=${TEST_RESULTS_PATH}"
 
-                        // Check logs of the svm_service container
-                        sh 'docker logs svm_service'
+                        // Debugging: Check if the file exists inside the container
+                        sh 'docker exec -t svm_service ls -la /tests/'
 
-                        // Check if the test directory exists inside the container
-                        sh 'docker exec -t svm_service ls -la /tests'
-
-                        // Print the working directory inside the container
-                        sh 'docker exec -t svm_service pwd'
-
-                        // Print the PYTHONPATH to check if the directories are correct
-                        sh 'docker exec -t svm_service echo $PYTHONPATH'
-
-                        // Ensure pytest is installed in the container
-                        sh 'docker exec -t svm_service pip install pytest'
-
-                        // Run tests for the SVM service using pytest
-                        sh 'docker exec -t svm_service pytest /tests --maxfail=1 --disable-warnings -q --junitxml=/tests/junitResult.xml'
+                        // Copy the test results from the container to the Jenkins workspace
+                        sh "docker cp svm_service:${TEST_RESULTS_PATH} ./${LOCAL_TEST_RESULTS_PATH}"
 
                     } catch (Exception e) {
                         echo "Error during testing: ${e}"
@@ -73,11 +63,13 @@ pipeline {
         stage('Publish Test Results') {
             steps {
                 script {
-                    // Archive test results so they can be fetched later
-                    archiveArtifacts artifacts: 'tests/junitResult.xml', allowEmptyArchive: true
-
-                    // Publish the test results from the copied test results XML
-                    junit allowEmptyResults: true, testResults: 'tests/junitResult.xml'
+                    // Check if the test result file is available before publishing
+                    if (fileExists(LOCAL_TEST_RESULTS_PATH)) {
+                        // Publish the test results from the copied test results XML
+                        junit allowEmptyResults: true, testResults: LOCAL_TEST_RESULTS_PATH
+                    } else {
+                        echo "Test result file not found: ${LOCAL_TEST_RESULTS_PATH}"
+                    }
                 }
             }
         }
@@ -114,4 +106,3 @@ pipeline {
         }
     }
 }
-
