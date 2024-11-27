@@ -11,4 +11,5 @@ jobs:
     steps:
       - name: Trigger Jenkins Build
         run: |
-          curl -X POST http://localhost:8080/job/music_classification_2/build
+          curl -X POST http://selma_lafi:1152093bfeb7cbf18f49d5e3d20d565fb3@http://localhost:8080/job/music_classification_2/build
+
