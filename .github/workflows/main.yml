@@ -1,0 +1,14 @@
+name: Trigger Jenkins Build
+
+on:
+  push:
+    branches:
+      - main  # Or whatever branch you want
+
+jobs:
+  trigger-jenkins:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Jenkins Build
+        run: |
+          curl -X POST http://localhost:8080/job/music_classification_2/
