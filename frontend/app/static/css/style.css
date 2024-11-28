@@ -1,4 +1,4 @@
-body {
+/* body {
     background-image: url('../images/music.jpg');
     font-family: Arial, sans-serif;
     display: flex;
@@ -32,8 +32,99 @@ button {
 button:hover {
     background-color: #45a049;
 }
-
+*/
 #result {
     margin-top: 20px;
     font-size: 18px;
+} 
+body {
+    background-image: url('https://cdn.pixabay.com/photo/2022/04/01/19/26/technology-7105517_1280.jpg');
+    background-size: cover; /* Ajuste l'image pour couvrir tout le container */
+    background-position: center; /* Centre l'image */
+    background-repeat: no-repeat; /* Empêche la répétition */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f4f4f9;
+}
+
+.header {
+    background-color: white;
+    padding: 0 20px;
+    margin-bottom: 50px;
+    text-align: center;
+    margin-top: 50px;
+    width: 600px;
+    border-radius: 8px;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+background-color: white;
+}
+
+.container {
+    position: relative;
+    width: 400px;
+    height: 300px;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: white;
+}
+
+.form-wrapper {
+    display: flex;
+    width: 200%;
+    height: 100%;
+    transition: transform 0.5s ease;
+}
+
+.form {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: white;
+}
+
+.form--heading {
+    font-size: 20px;
+    margin-bottom: 50px;
+    
+}
+
+.form input {            
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px 0 ;
+
+}
+
+.button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #bd0000;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 190px;
+}
+
+.button:hover {
+    background-color: #521a1a;
+}
+
+.btn-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+.audio-form{
+    margin-bottom: 20px;
 }

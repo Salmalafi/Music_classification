@@ -68,3 +68,17 @@ async function predictSvmGenre() {
 
     reader.readAsDataURL(audioFile);
 }
+
+// Sélection des éléments
+const signupBtn = document.getElementById("signup-btn");
+const loginBtn = document.getElementById("login-btn");
+const formWrapper = document.getElementById("form-wrapper");
+
+// Ajouter des événements pour changer la position
+signupBtn.addEventListener("click", () => {
+    formWrapper.style.transform = "translateX(-50%)";
+});
+
+loginBtn.addEventListener("click", () => {
+    formWrapper.style.transform = "translateX(0%)";
+});

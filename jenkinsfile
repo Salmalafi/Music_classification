@@ -85,7 +85,7 @@ pipeline {
         stage('Push Docker Images') {
             steps {
                 script {
-                    // Push Docker images to the registry
+                    // Push Docker images to the registry docker hub
                     withDockerRegistry([credentialsId: 'docker-hub-credentials']) {
                         sh "docker push ${DOCKER_REGISTRY}/svm-service:latest"
                         sh "docker push ${DOCKER_REGISTRY}/vgg19-service:latest"

@@ -1,13 +1,70 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Music Genre and Image Classifier</title>
     <link rel="stylesheet" href="static/css/style.css">
 </head>
-<body>
-    <div class="container">
-        <hr>
+<body style="display: flex;flex-direction: column;">
+
+    
+    <div style="background-color: white;padding-left: 20px;padding-right: 20px;margin-bottom: 50px;">
+        <h2>Music Genre Classifier</h2>
+    </div>
+<div class="container">
+    <div class="message signup">
+      <div class="btn-wrapper">
+        <button class="button" id="signup">Sign Up</button>
+        <button class="button" id="login"> Login</button>
+      </div>
+    </div>
+    <div class="form form--signup">
+      <div class="form--heading">Welcome! Sign Up</div>
+      <form autocomplete="off">
+        <input type="text" placeholder="Name">
+        <input type="email" placeholder="Email">
+        <input type="password" placeholder="Password">
+        <button class="button">Sign Up</button>
+      </form>
+    </div>
+    <div class="form form--login">
+      <div class="form--heading">Welcome back! </div>
+      <form autocomplete="off">
+        <input type="text" placeholder="Name">
+        <input type="password" placeholder="Password">
+        <button class="button">Login</button>
+      </form>
+    </div>
+  </div>
+  
+   -->
+
+
+    <!-- <div style="background-color: white;padding-left: 20px;padding-right: 20px;margin-bottom: 50px;">
+        <h2>Music Genre Classifier</h2>
+    </div>
+    <div style="display: flex;gap: 50px;" >
+        <div style="background-color: white;height: 200px;padding: 10px;">
+            <form id="audio-form-svm" enctype="multipart/form-data">
+                <label for="audio-file-svm">Upload a Music File (WAV):</label>
+                <input type="file" id="audio-file-svm" accept="audio/wav" required>
+                <button type="button" onclick="predictSvmGenre()">Predict Genre with SVM</button>
+            </form>
+        </div>
+        <div style="background-color: white;height: 200px;padding: 10px;">
+            <form id="audio-form-vgg" enctype="multipart/form-data">
+                <label for="audio-file-vgg">Upload a Music File (WAV):</label>
+                <input type="file" id="audio-file-vgg" accept="audio/wav" required>
+                <button type="button" onclick="predictGenre()">Classify Music with VGG19</button>
+            </form>
+        </div>
+ -->
+
+
+
+
+
+        <!-- <hr>
         <section>
             <h2>Music Genre Classifier</h2>
             <form id="audio-form-svm" enctype="multipart/form-data">
@@ -28,8 +85,62 @@
             </form>
             <p id="image-result"></p>
         </section>
-        
+         -->
+
+
+
+         
+    <!-- </div>
+    <script src="static/js/app.js"></script> -->
+<!-- </body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Genre and Image Classifier</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    
+</head>
+<body>
+    <div class="header">
+        <h2>Music Genre Classifier</h2>
     </div>
-    <script src="static/js/app.js"></script>
+
+    <div class="btn-wrapper">
+        <button class="button" id="login-btn">SVM</button>
+        <button class="button" id="signup-btn">VGG</button>
+    </div>
+
+    <div class="container">
+        <div class="form-wrapper" id="form-wrapper">
+            <!-- SVM Form -->
+            <div class="form" id="login-form">
+                <h2 class="form--heading">Predict Music Genre with SVM</h2>
+                <form id="audio-form-svm" enctype="multipart/form-data">
+                    <h4 for="audio-file-svm" class="audio-form">Upload a Music File (WAV):</h4>
+                    <input type="file" id="audio-file-svm" class="audio-form" accept="audio/wav" required>
+                    <button type="button" class="button" class="audio-form" onclick="predictSvmGenre()" style="width: 100%;">Predict Music Genre </button>
+                </form>
+                <p id="music-result"></p>
+            </div>
+
+            <!-- VGG Form -->
+            <div class="form" id="signup-form">
+                <h2 class="form--heading">Predict Music Genre with VGG19</h2>
+                <form id="audio-form-vgg"  enctype="multipart/form-data">
+                    <h4 for="audio-file-vgg" class="audio-form">Upload a Music File (WAV):</h4>
+                    <input type="file" id="audio-file-vgg" class="audio-form" accept="audio/wav" required>
+                    <button type="button" class="button" class="audio-form" onclick="predictGenre()" style="width: 100%;">Predict Music Genre</button>
+                </form>
+                <p id="image-result" style="margin-bottom: 10px;"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="static/js/app.js"></script> 
 </body>
 </html>
