@@ -13,8 +13,8 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 script {
-                    cleanWs()  // Clean workspace before starting
-                    checkout scm  // Checkout the code from SCM
+                    cleanWs()  
+                    checkout scm  
                 }
             }
         }
@@ -22,7 +22,7 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 script {
-                    // Build images using docker-compose
+                  
                     sh "docker-compose -f ${COMPOSE_FILE} build"
                 }
             }
@@ -32,41 +32,24 @@ pipeline {
             steps {
                 script {
                     try {
-                        // Start services in detached mode
                         sh "docker-compose -f ${COMPOSE_FILE} up -d"
-
-                        // Wait for services to be ready
                         sh 'sleep 20'
 
-                        // Debugging: Verify running containers
                         sh 'docker ps -a'
 
-                        // Check logs of the svm_service container
-                        sh 'docker logs svm_service'
-
-                        // Check if the test directory exists inside the container
-                        sh 'docker exec -t svm_service ls -la /tests'
-
-                        // Print the working directory inside the container
-                        sh 'docker exec -t svm_service pwd'
-
-                        // Print the PYTHONPATH to check if the directories are correct
                         sh 'docker exec -t svm_service echo $PYTHONPATH'
 
-                        // Ensure pytest is installed in the container
                         sh 'docker exec -t svm_service pip install pytest'
 
-                        // Run tests for the SVM service using pytest
                         sh 'docker exec -t svm_service pytest /tests --maxfail=1 --disable-warnings -q --junitxml=/tests/svm_test_results.xml'
 
-                        // Copy the test results from the container to the local workspace
                         sh 'docker cp svm_service:/tests/svm_test_results.xml ./svm_test_results.xml'
 
                     } catch (Exception e) {
                         echo "Error during testing: ${e}"
                         throw e
                     } finally {
-                        // Cleanup: Stop services after tests
+                      
                         sh "docker-compose -f ${COMPOSE_FILE} down"
                     }
                 }
@@ -76,7 +59,7 @@ pipeline {
         stage('Publish Test Results') {
             steps {
                 script {
-                    // Publish the test results from the copied test results XML
+                    
                     junit allowEmptyResults: true, testResults: 'svm_test_results.xml'
                 }
             }
@@ -85,7 +68,7 @@ pipeline {
         stage('Push Docker Images') {
             steps {
                 script {
-                    // Push Docker images to the registry docker hub
+                   
                     withDockerRegistry([credentialsId: 'docker-hub-credentials']) {
                         sh "docker push ${DOCKER_REGISTRY}/svm-service:latest"
                         sh "docker push ${DOCKER_REGISTRY}/vgg19-service:latest"
@@ -98,7 +81,7 @@ pipeline {
         stage('Deploy Application') {
             steps {
                 script {
-                    // Deploy the application using Docker Compose
+                  
                     sh "docker-compose -f ${COMPOSE_FILE} up -d"
                 }
             }
