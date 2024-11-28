@@ -5,7 +5,7 @@ services:
     build:
       context: ./svm_service
     container_name: svm_service
-    image: salmalafiii23/svm-service:latest  # Specify image name here
+    image: salmalafiii23/svm-service:latest 
     ports:
       - "5000:5000"
 
@@ -13,7 +13,7 @@ services:
     build:
       context: ./vgg19_service
     container_name: vgg19_service
-    image: salmalafiii23/vgg19-service:latest  # Specify image name here
+    image: salmalafiii23/vgg19-service:latest 
     ports:
       - "5002:5002"
 
@@ -21,6 +21,6 @@ services:
     build:
       context: ./frontend
     container_name: frontend
-    image: salmalafiii23/frontend:latest  # Specify image name here
+    image: salmalafiii23/frontend:latest 
     ports:
       - "5001:5001"
