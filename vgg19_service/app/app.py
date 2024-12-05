@@ -84,7 +84,7 @@ def predict_genre_with_tflite(features):
     except Exception as e:
         logging.error(f"Error in TFLite prediction: {str(e)}")
         return None
-        
+
 @app.route('/classify', methods=['POST'])
 def classify_music():
     try:
@@ -98,14 +98,14 @@ def classify_music():
             audio_data = base64.b64decode(data['wav_music'])
         except Exception as e:
             logging.error(f"Error decoding base64 audio data: {str(e)}")
-            return jsonify({'error': 'Invalid base64 audio data'}), 400
+            return jsonify({'error': 'Error during prediction'}), 400  # More generic error message
 
         # Attempt to load the audio data using pydub
         try:
             audio_segment = AudioSegment.from_file(BytesIO(audio_data), format='wav')
         except Exception as e:
             logging.error(f"Error loading audio data: {str(e)}")
-            return jsonify({'error': 'Invalid audio format or corrupted audio data'}), 400
+            return jsonify({'error': 'Error during prediction'}), 400  # More generic error message
 
         # Preprocess the audio to match the model's expected input shape
         features = preprocess_audio(audio_segment)
@@ -123,7 +123,7 @@ def classify_music():
 
     except Exception as e:
         logging.error(f"Error in classification: {str(e)}")
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': 'Error during prediction'}), 500  # Catch-all for unexpected errors
 
 
 if __name__ == '__main__':
