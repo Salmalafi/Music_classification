@@ -12,7 +12,7 @@ ENV STATIC_PATH /app/static
 COPY ./requirements.txt /requirements.txt
 RUN pip install -r /requirements.txt
 # Copy the pre-trained model
-COPY /app/vgg19_music_classifier.h5 /app/vgg19_music_classifier.h5
+COPY /app/vgg_model.tflite /app/vgg_model.tflite
 
 # Copy the application code into the container
 COPY . .
