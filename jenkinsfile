@@ -55,6 +55,7 @@ pipeline {
             steps {
                 script {
                     junit allowEmptyResults: true, testResults: 'svm_test_results.xml'
+                    junit allowEmptyResults: true, testResults: 'vgg_test_results.xml'
                 }
             }
         }
