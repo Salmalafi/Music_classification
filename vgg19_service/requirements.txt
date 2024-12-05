@@ -9,3 +9,4 @@ joblib==1.2.0
 pydub==0.25.1
 matplotlib==3.6.2
 pillow==9.2.0
+xmlrunner==1.7.7
