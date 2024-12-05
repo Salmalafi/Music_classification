@@ -35,8 +35,8 @@ pipeline {
                         sh "docker-compose -f ${COMPOSE_FILE} up -d"
                         sh 'sleep 20'
                         sh 'docker ps -a'
-                        sh 'docker exec -t  pip  svm_service install pytest'
-                        sh 'docker exec -t  pip  vgg19_service install pytest'
+                        sh 'docker exec -t svm_service pip install pytest'
+                        sh 'docker exec -t vgg19_service pip install pytest'
                         sh 'docker exec -t svm_service pytest /tests --maxfail=1 --disable-warnings -q --junitxml=/tests/svm_test_results.xml'
                         sh 'docker exec -t vgg19_service pytest /tests --maxfail=1 --disable-warnings -q --junitxml=/tests/vgg_test_results.xml'
                         sh 'docker cp svm_service:/tests/svm_test_results.xml ./svm_test_results.xml'
